@@ -1,0 +1,148 @@
+---
+title: "Analysis of Sustainable Development Goals"
+author: "SOfia"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+This analysis focuses on the first three Sustainable Development Goals (SDGs) SDG1(Ending Poverty),SDG2(Zero Hunger),SDG3(Good Health and Well-being in Kenya,Ghana,EGypt,Botswana and Cameroon.
+
+## Data Import
+```{r data-import}
+# Load necessary libraries
+library(tidyverse)
+library(table1)
+
+# Load the dataset
+gdp_data <- read.csv("Final.csv")
+
+# Preview the dataset
+head(gdp_data)
+#View(gdp_data)
+```
+
+## Data Cleaning
+I extracted the data from a set of datasets spanning the years 2000 to 2017 for the specified countries. Due to the presence of many missing values, i replaced them with the mean value of the corresponding variables for each country. In total, there were 90 observations and 10 variables.
+```{r data-cleaning}
+
+# Display cleaned dataset summary
+summary(gdp_data)
+str(gdp_data)
+```
+##factor of categorical variables  
+```{r}
+
+gdp_data$Code<-factor(gdp_data$Code)
+gdp_data$year<-factor(gdp_data$year)
+str(gdp_data)
+View(gdp_data)
+
+```
+
+  
+```{r}
+#data$Year<-factor(data$Year)
+gdp_data$GDPphead<-as.numeric(gdp_data$GDPphead)
+gdp_data$NeonatalDeathRate<-as.numeric(gdp_data$NeonatalDeathRate)
+gdp_data$NoPeopleBPovertyLine<-as.integer(gdp_data$NoPeopleBPovertyLine)
+gdp_data$unfedprcnt<-as.numeric(gdp_data$unfedprcnt)
+gdp_data$stuntPerc5<-as.numeric(gdp_data$stuntPerc5)
+gdp_data$stuntPerc5 <- round(gdp_data$stuntPerc5, 2)
+gdp_data$GDPphead <- round(gdp_data$GDPphead, 2)
+gdp_data$NeonatalDeathRate <- round(gdp_data$NeonatalDeathRate, 2)
+gdp_data$unfedprcnt <- round(gdp_data$unfedprcnt, 2)
+```
+
+ 
+```{r}
+#clean_data <- na.omit(gdp_data)
+# Preview cleaned data
+str(gdp_data)
+```
+
+  
+
+
+## Descriptive Statistics
+Summarize maternal mortality and GDP per capita across regions and countries.
+
+```{r descriptive-stats}
+# Summary statistics for maternal mortality and GDP
+attach(gdp_data)
+tab2<- table1(~ GDPphead+MaternalMortRate|Code , data=gdp_data)
+tab2
+```
+The table shows stunting is highest in Cameroon (34.4\%) and poverty in Kenya (62.0\%), while Egypt has the lowest rates for both. Botswana has the highested percentage (21.8\%), and neonatal deaths range from 16.6 in Egypt to 32.0 in Cameroon. Overall, health and socioeconomic indicators vary significantly across countries.
+
+
+## Exploratory Data Analysis
+Visualize the relationship between maternal mortality and GDP per capita, and examine distributions.  
+```{r}
+
+ par(mfrow=c(2,2))
+ hist(GDPphead,col="lightgreen",breaks = 20)
+ hist(MaternalMortRate,col="pink",breaks=20)
+ boxplot(GDPphead~Code,col="lightgreen")
+ boxplot(GDPphead~year)
+```
+
+
+## Modeling: Maternal Mortality and GDP per Capita
+```{r modeling-maternal-mortality}
+# Fit the linear model
+model1 <- glm(MaternalMortRate ~ GDPphead, data = gdp_data,family = "poisson")
+
+# Display model summary
+summary(model1)
+
+
+```
+## plots of the model  
+```{r}
+
+plot(model1)
+```
+
+## Exploratory data Analysis  
+```{r}
+ par(mfrow=c(2,2))
+ hist(stuntPerc5,col="lightgreen",breaks = 20)
+ hist(PrcntBelowPovertyLine,col="pink",breaks=20)
+ hist(NeonatalDeathRate,col="pink",breaks=20)
+ hist(unfedprcnt,col="pink",breaks=20)
+ 
+ par(mfrow=c(2,2))
+ boxplot(unfedprcnt~Code,col="lightgreen")
+ boxplot(unfedprcnt~year)
+ boxplot(PrcntBelowPovertyLine~Code,col="lightgreen")
+ boxplot(PrcntBelowPovertyLine~year)
+ par(mfrow=c(2,2))
+ boxplot(stuntPerc5~Code,col="lightgreen")
+ boxplot(stuntPerc5~year)
+ 
+```
+
+## Summary Table  
+```{r}
+tab3<- table1(~ stuntPerc5+PrcntBelowPovertyLine+unfedprcnt+NeonatalDeathRate|Code , data=gdp_data)
+tab3
+```
+
+
+
+## Second model  
+```{r}
+model2<-lm(NeonatalDeathRate~stuntPerc5+PrcntBelowPovertyLine+unfedprcnt,data = gdp_data)
+summary(model2)
+```
+## model evaluation  
+```{r}
+plot(model2)
+```
+
+
+---
+
