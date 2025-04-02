@@ -15,6 +15,6 @@ R Markdown for reproducible research
 
 Statistical Analysis & Data Visualization
 # Analysis Results
-You can view the full results in the [SDG.html](SDG.html) file.
+You can view the full results in the [SDG.html](SDG.ipynb) file.
 
 
