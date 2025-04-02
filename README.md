@@ -6,3 +6,12 @@ This project involves data analysis using R to explore various Sustainable Devel
 The dataset contains multiple indicators related to economic, social, and environmental factors.
 
 Data cleaning, transformation, and exploratory data analysis (EDA) are performed.
+# Technologies Used
+R Programming
+
+Tidyverse (dplyr, ggplot2, tidyr)
+
+R Markdown for reproducible research
+
+Statistical Analysis & Data Visualization
+
